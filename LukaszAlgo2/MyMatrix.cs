@@ -41,6 +41,11 @@ namespace LukaszAlgo2
             Matrix = matrix;
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
         public void PrintMatrix()
         {
             for (int i=0; i<Rows(); i++)
