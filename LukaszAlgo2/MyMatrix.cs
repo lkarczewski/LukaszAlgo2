@@ -48,11 +48,11 @@ namespace LukaszAlgo2
 
         public void PrintMatrix()
         {
-            for (int i=0; i<Rows(); i++)
+            for (int i = 0; i < Rows(); i++)
             {
-                for (int j=0; j<Columns(); j++)
+                for (int j = 0; j < Columns(); j++)
                 {
-                    Console.Write(this[i,j]);
+                    Console.Write(this[i, j] + " ");
                 }
 
                 Console.WriteLine();
@@ -63,7 +63,7 @@ namespace LukaszAlgo2
         {
             return Matrix.GetLength(0); //liczby określają wymiar
         }
-        
+
         public int Columns()
         {
             return Matrix.GetLength(1);
