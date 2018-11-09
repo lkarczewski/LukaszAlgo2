@@ -35,6 +35,10 @@ namespace LukaszAlgo2
                         r = random.Next(-65536, 65535);
                         matrix[i, j] = (dynamic)(float)(r / 65536);
                     }
+                    else if (matrix is Ulamek[,])
+                    {
+                        matrix[i, j] = (dynamic)new Ulamek(random.Next(), random.Next(1, int.MaxValue));
+                    }
                 }
             }
 
@@ -99,68 +103,6 @@ namespace LukaszAlgo2
             }
 
             return currentMaxIndex;
-        }
-
-        public static MyMatrix<T> operator +(MyMatrix<T> a, MyMatrix<T> b)
-        {
-            if (a.Rows() != b.Rows() || a.Columns() != b.Columns())
-                throw new ArgumentException("Macierze mają różne rozmiary!");
-
-            var output = new T[a.Rows(), a.Columns()];
-            for(var row = 0; row < a.Rows(); row++)
-            {
-                for(var column = 0; column < a.Columns(); column++)
-                {
-                    output[row, column] = (dynamic)a[row, column] + (dynamic)b[row, column];
-                }
-            }
-
-            return new MyMatrix<T>(output);
-        }
-
-        public static MyMatrix<T> operator *(MyMatrix<T> a, MyMatrix<T> b)
-        {
-            if (a.Columns() != b.Rows())
-                throw new ArgumentException("Macierze mają różne rozmiary!");
-
-            var output = new T[a.Rows(), b.Columns()];
-            for(var row = 0; row < a.Rows(); row++)
-            {
-                for(var column = 0; column < b.Columns(); column++)
-                {
-                    var sum = new T();
-                    for(var i = 0; i < a.Columns(); i++)
-                    {
-                        sum += (dynamic) a[row, i] * (dynamic) b [i, column];
-                    }
-
-                    output[row, column] = sum;
-                }
-            }
-
-            return new MyMatrix<T>(output);
-        }
-
-        public static T[] operator *(MyMatrix<T> a, T[] b)
-        {
-            if (a.Columns() != b.Length)
-                throw new ArgumentException("Matrix sizes are not equal.");
-
-            var output = new T[a.Rows()];
-            for (var row = 0; row < a.Rows(); row++)
-            {
-                output[row] = new T();
-            }
-
-            for (var row = 0; row < a.Rows(); row++)
-            {
-                for (var column = 0; column < b.Length; column++)
-                {
-                    output[row] += (dynamic)a[row, column] * (dynamic)b[column];
-                }
-            }
-
-            return output;
         }
 
         public void GaussWithoutPivot(T[] vector) //obiekt ma w sobie macierz, ale nie posiada wektora

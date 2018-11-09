@@ -56,6 +56,11 @@ namespace LukaszAlgo2
             return (double) ulamek.licznik / (double) ulamek.mianownik;
         }
 
+        public override string ToString()
+        {
+            return this.licznik.ToString() + "/" + this.mianownik.ToString();
+        }
+
         public static Ulamek operator +(Ulamek a, Ulamek b)
         {
             return new Ulamek(a.licznik * b.mianownik + b.licznik * a.mianownik, a.mianownik * b.mianownik);
