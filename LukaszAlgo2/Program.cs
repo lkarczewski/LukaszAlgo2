@@ -12,66 +12,15 @@ namespace LukaszAlgo2
     {
         static void Main(string[] args)
         {
-            //Random _random = new Random();
-            //int matrixSize = 2;
-            //var fractionValues = new Ulamek[matrixSize, matrixSize];
-            //for (var i = 0; i < matrixSize; i++)
-            //{
-            //    for (var j = 0; j < matrixSize; j++)
-            //    {
-            //        var numerator = _random.Next(-65536, 65535);
-            //        var denominator = 65536;
-            //        if (Math.Abs(numerator) > Math.Abs(denominator))
-            //            fractionValues[i, j] = new Ulamek(denominator, numerator);
-            //        else
-            //            fractionValues[i, j] = new Ulamek(numerator, denominator);
-            //    }
-            //}
-
-            //MyMatrix<Ulamek> macierz = new MyMatrix<Ulamek>(matrixSize, matrixSize);
-
-            //for (var i = 0; i < matrixSize; i++)
-            //{
-            //    for (var j = 0; j < matrixSize; j++)
-            //    {
-            //        macierz[i,j] = fractionValues[i,j];
-            //    }
-            //}
-
-            //for (var i = 0; i < matrixSize; i++)
-            //{
-            //    for (var j = 0; j < matrixSize; j++)
-            //    {
-            //        Console.WriteLine(macierz[i, j]);
-            //    }
-            //}
-
-            //var fractionVector = new Ulamek[matrixSize];
-            //for (var j = 0; j < matrixSize; j++)
-            //{
-            //    var numerator = _random.Next(10);
-            //    var denominator = _random.Next(1, 10);
-            //    if (numerator > denominator)
-            //        fractionVector[j] = new Ulamek(denominator, numerator);
-            //    else
-            //        fractionVector[j] = new Ulamek(numerator, denominator);
-            //}
-
-            //macierz.GaussWithoutPivot(fractionVector);
-
-            //Console.WriteLine();
-            //for (var i = 0; i < matrixSize; i++)
-            //{
-            //    Console.WriteLine((double)fractionVector[i]);
-            //}
-
-
             Test t1 = new Test();
+            t1.GaussWithoutPivotAccuracyTest(5, 2);
+            t1.GaussPartialPivotAccuracyTest(5, 2);
+            t1.GaussFullPivotAccuracyTest(5, 2);
 
             //StreamWriter writer1 = new StreamWriter("CzasGaussWithoutPivot.csv", append: true);
             //writer1.WriteLine("rozmiar;czas-double;czas-float");
             //writer1.Close();
-            //for (int i = 10; i <= 200; i += 10)
+            //for (int i = 10; i <= 50; i += 10)
             //{
             //    t1.GaussWithoutPivotTimeTest(i, 50);
             //}

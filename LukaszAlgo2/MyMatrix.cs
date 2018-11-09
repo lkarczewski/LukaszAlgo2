@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,7 @@ namespace LukaszAlgo2
             var random = new Random();
             var matrix = new T[rows, columns];
             double r;
+            BigInteger n;
 
             for (var i = 0; i < rows; i++)
             {
@@ -37,7 +39,8 @@ namespace LukaszAlgo2
                     }
                     else if (matrix is Ulamek[,])
                     {
-                        matrix[i, j] = (dynamic)new Ulamek(random.Next(), random.Next(1, int.MaxValue));
+                        n = random.Next(-65536, 65535);
+                        matrix[i, j] = (dynamic)new Ulamek(n, 65536);
                     }
                 }
             }
