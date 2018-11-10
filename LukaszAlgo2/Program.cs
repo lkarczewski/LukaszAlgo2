@@ -13,8 +13,8 @@ namespace LukaszAlgo2
         static void Main(string[] args)
         {
             Test t1 = new Test();
-            t1.TestFraction(3);
-            //t1.GaussWithoutPivotAccuracyTest(5, 2);
+            //t1.TestFraction(3);
+            t1.GaussWithoutPivotAccuracyTest(5, 5);
 
             //StreamWriter writer1 = new StreamWriter("CzasGaussWithoutPivot.csv", append: true);
             //writer1.WriteLine("rozmiar;czas-double;czas-float");

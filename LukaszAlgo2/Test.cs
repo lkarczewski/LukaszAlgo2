@@ -83,14 +83,16 @@ namespace LukaszAlgo2
         public Ulamek[] CalculatedFractionVectorB(MyMatrix<Ulamek> m, Ulamek[] vector)
         {
             int size = vector.Length;
-            var values = new Ulamek[size];
+            Ulamek[] values = new Ulamek[size];
+            for (int i = 0; i < size; i++) values[i] = new Ulamek();
+
             for (var i = 0; i < m.Rows(); i++)
             {
                 for (var j = 0; j < m.Columns(); j++)
                 {
-                    //wiem, że to jest źle, to jest ogólna postać tego co chcę zrobić bez żadnych rzutowań
-                    values[i] = values[i] + m.Matrix[i, j].licznik / m.Matrix[i, j].mianownik * vector[j].licznik / vector[j].mianownik;
+                    values[i] = values[i] + (m.Matrix[i, j]) * (vector[j]);
                 }
+                Console.WriteLine(values[i]);
             }
 
             return values;
@@ -541,6 +543,8 @@ namespace LukaszAlgo2
             {
                 _wektorUlamekB[i] = wektorUlamekB[i];
             }
+
+            for (int i = 0; i < size; i++) wektorNormyUlamek[i] = new Ulamek();
 
             for (var i = 0; i < count; i++)
             {
