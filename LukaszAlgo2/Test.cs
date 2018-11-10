@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
+using System.Numerics;
+
 
 namespace LukaszAlgo2
 {
@@ -79,6 +80,31 @@ namespace LukaszAlgo2
             return values;
         }
 
+        public Ulamek[] CalculatedFractionVectorB(MyMatrix<Ulamek> m, Ulamek[] vector)
+        {
+            int size = vector.Length;
+            var values = new Ulamek[size];
+            for (var i = 0; i < m.Rows(); i++)
+            {
+                for (var j = 0; j < m.Columns(); j++)
+                {
+                    //wiem, że to jest źle, to jest ogólna postać tego co chcę zrobić bez żadnych rzutowań
+                    values[i] = values[i] + m.Matrix[i, j].licznik / m.Matrix[i, j].mianownik * vector[j].licznik / vector[j].mianownik;
+                }
+            }
+
+            return values;
+        }
+
+        public void TestFraction(int size)
+        {
+            MyMatrix<Ulamek> macierzUlamekA = new MyMatrix<Ulamek>(size, size);
+            Ulamek[] wektorUlamekX = GenerateRandomFractionVector(size);
+            Ulamek[] wektorUlamekB = new Ulamek[size];
+
+            wektorUlamekB = CalculatedFractionVectorB(macierzUlamekA, wektorUlamekX);
+        }
+
         public void GaussWithoutPivotTimeTest(int size, int count)
         {
             MyMatrix<Ulamek> macierzUlamek = new MyMatrix<Ulamek>(size, size);
@@ -150,6 +176,7 @@ namespace LukaszAlgo2
                 sumaUlamek += czasyUlamek[i];
             }
 
+            //CZAS DOUBLE
             for (int i = 0; i < count; i++)
             {
                 var watchDouble = Stopwatch.StartNew();
@@ -169,6 +196,7 @@ namespace LukaszAlgo2
                 sumaDouble += czasyDouble[i];
             }
 
+            //CZAS FLOAT
             for (int i = 0; i < count; i++)
             {
                 var watchFloat = Stopwatch.StartNew();
@@ -276,6 +304,7 @@ namespace LukaszAlgo2
                 sumaUlamek += czasyUlamek[i];
             }
 
+            //CZAS DOUBLE
             for (int i = 0; i < count; i++)
             {
                 var watchDouble = Stopwatch.StartNew();
@@ -295,6 +324,7 @@ namespace LukaszAlgo2
                 sumaDouble += czasyDouble[i];
             }
 
+            //CZAS FLOAT
             for (int i = 0; i < count; i++)
             {
                 var watchFloat = Stopwatch.StartNew();
@@ -402,6 +432,7 @@ namespace LukaszAlgo2
                 sumaUlamek += czasyUlamek[i];
             }
 
+            //CZAS DOUBLE
             for (int i = 0; i < count; i++)
             {
                 var watchDouble = Stopwatch.StartNew();
@@ -421,6 +452,7 @@ namespace LukaszAlgo2
                 sumaDouble += czasyDouble[i];
             }
 
+            //CZAS FLOAT
             for (int i = 0; i < count; i++)
             {
                 var watchFloat = Stopwatch.StartNew();
@@ -468,6 +500,7 @@ namespace LukaszAlgo2
             Ulamek[] wektorUlamekX = GenerateRandomFractionVector(size);
             Ulamek[] wektorUlamekB = new Ulamek[size];
             Ulamek[] _wektorUlamekB = new Ulamek[size];
+            Ulamek[] wektorNormyUlamek = new Ulamek[size];
             double[] wektorDoubleX = new double[size];
             double[] wektorDoubleB = new double[size];
             double[] _wektorDoubleB = new double[size];
@@ -500,92 +533,124 @@ namespace LukaszAlgo2
                 }
             }
 
-            //LICZENIE DOUBLE
-            for (var i = 0; i < macierzUlamekA.Rows(); i++)
+            //LICZENIE UŁAMKA
+
+            wektorUlamekB = CalculatedFractionVectorB(macierzUlamekA, wektorUlamekX);
+
+            for (var i = 0; i < wektorUlamekB.Length; i++)
             {
-                for (var j = 0; j < macierzUlamekA.Columns(); j++)
-                {
-                    //wektorUlamekB[i] += macierzUlamekA[i, j] * wektorUlamekX[j];
-                    wektorDoubleB[i] += macierzDoubleA[i, j] * wektorDoubleX[j];
-                }
+                _wektorUlamekB[i] = wektorUlamekB[i];
             }
 
-            for (var i = 0; i < wektorDoubleB.Length; i++)
-            {
-                //_wektorUlamekB[i] = wektorUlamekB[i];
-                _wektorDoubleB[i] = wektorDoubleB[i];
-                _wektorFloatB[i] = wektorFloatB[i];
-            }
-
-            //Console.WriteLine("Wektor normy double: ");
             for (var i = 0; i < count; i++)
             {
-                macierzDoubleA.GaussWithoutPivot(wektorDoubleB);
-                for (var j = 0; j < wektorDoubleX.Length; j++)
+                macierzUlamekA.GaussWithoutPivot(wektorUlamekB);
+                for (var j = 0; j < wektorUlamekX.Length; j++)
                 {
-                    wektorNormyDouble[j] = wektorDoubleB[j] - wektorDoubleX[j];
-                    for (var k = 0; k < wektorNormyDouble.Length; k++)
+                    wektorNormyUlamek[j] = wektorUlamekB[j] - wektorUlamekX[j];
+                    for (var k = 0; k < wektorNormyUlamek.Length; k++)
                     {
-                        normaDouble += Math.Pow(wektorNormyDouble[k], 2);
+                        normaUlamek += Math.Pow((double)wektorNormyUlamek[k], 2);
                         //normaDouble = Math.Sqrt(normaDouble);
-                        macierzDoubleA[j, k] = _macierzDoubleA[j, k];
-                        wektorDoubleB[j] = _wektorDoubleB[j];
+                        macierzUlamekA[j, k] = _macierzUlamekA[j, k];
+                        wektorUlamekB[j] = _wektorUlamekB[j];
                     }
                     //Console.WriteLine(wektorNormyDouble[j]);
-                    wektorNormyDouble[j] = 0;
+                    //wektorNormyUlamek[j] = 0;
                 }
             }
-            normaDouble = Math.Sqrt(normaDouble);
-            sredniaNormaDouble = normaDouble / count;
+            normaUlamek = Math.Sqrt(normaUlamek);
+            sredniaNormaUlamek = normaUlamek / count;
 
-            //LICZENIE FLOAT
+            Console.WriteLine("Norma ulamek: " + normaUlamek);
+            Console.WriteLine("Średnia norma ulamek: " + sredniaNormaUlamek);
 
-            for (var i = 0; i < macierzFloatA.Rows(); i++)
-            {
-                for (var j = 0; j < macierzFloatA.Columns(); j++)
-                {
-                    wektorFloatB[i] += macierzFloatA[i, j] * wektorFloatX[j];
-                }
-            }
+            ////LICZENIE DOUBLE
+            //for (var i = 0; i < macierzUlamekA.Rows(); i++)
+            //{
+            //    for (var j = 0; j < macierzUlamekA.Columns(); j++)
+            //    {
+            //        //wektorUlamekB[i] += macierzUlamekA[i, j] * wektorUlamekX[j];
+            //        wektorDoubleB[i] += macierzDoubleA[i, j] * wektorDoubleX[j];
+            //    }
+            //}
 
-            for (var i = 0; i < wektorFloatB.Length; i++)
-            {
-                _wektorFloatB[i] = wektorFloatB[i];
-            }
+            //for (var i = 0; i < wektorDoubleB.Length; i++)
+            //{
+            //    //_wektorUlamekB[i] = wektorUlamekB[i];
+            //    _wektorDoubleB[i] = wektorDoubleB[i];
+            //    //_wektorFloatB[i] = wektorFloatB[i];
+            //}
 
-            //Console.WriteLine("Wektor normy float: ");
-            for (var i = 0; i < count; i++)
-            {
-                macierzFloatA.GaussWithoutPivot(wektorFloatB);
-                for (var j = 0; j < wektorFloatX.Length; j++)
-                {
-                    wektorNormyFloat[j] = wektorFloatB[j] - wektorFloatX[j];
-                    for (var k = 0; k < wektorNormyFloat.Length; k++)
-                    {
-                        normaFloat += (float)Math.Pow(wektorNormyFloat[k], 2);
-                        //normaDouble = Math.Sqrt(normaDouble);
-                        macierzFloatA[j, k] = _macierzFloatA[j, k];
-                        wektorFloatB[j] = _wektorFloatB[j];
-                    }
-                    //Console.WriteLine(wektorNormyFloat[j]);
-                    wektorNormyFloat[j] = 0;
-                }
-            }
-            normaFloat = (float)Math.Sqrt(normaFloat);
-            sredniaNormaFloat = normaFloat / count;
+            ////Console.WriteLine("Wektor normy double: ");
+            //for (var i = 0; i < count; i++)
+            //{
+            //    macierzDoubleA.GaussWithoutPivot(wektorDoubleB);
+            //    for (var j = 0; j < wektorDoubleX.Length; j++)
+            //    {
+            //        wektorNormyDouble[j] = wektorDoubleB[j] - wektorDoubleX[j];
+            //        for (var k = 0; k < wektorNormyDouble.Length; k++)
+            //        {
+            //            normaDouble += Math.Pow(wektorNormyDouble[k], 2);
+            //            //normaDouble = Math.Sqrt(normaDouble);
+            //            macierzDoubleA[j, k] = _macierzDoubleA[j, k];
+            //            wektorDoubleB[j] = _wektorDoubleB[j];
+            //        }
+            //        //Console.WriteLine(wektorNormyDouble[j]);
+            //        wektorNormyDouble[j] = 0;
+            //    }
+            //}
+            //normaDouble = Math.Sqrt(normaDouble);
+            //sredniaNormaDouble = normaDouble / count;
 
-            StreamWriter writer = new StreamWriter("NormaGaussWithoutPivot.csv", append: true);
-            if (writer != null)
-            {
-                writer.WriteLine(String.Format(size + "x" + size + ";" + normaDouble + ";" + normaFloat));
-            }
-            writer.Close();
+            ////LICZENIE FLOAT
 
-            Console.WriteLine("GAUSS WITHOUT PIVOT:");
-            Console.WriteLine("Norma double: " + normaDouble);
-            Console.WriteLine("Średnia norma double: " + sredniaNormaDouble);
-            Console.WriteLine("Norma float: " + normaFloat);
-            Console.WriteLine("Średnia norma float: " + sredniaNormaFloat);
+            //for (var i = 0; i < macierzFloatA.Rows(); i++)
+            //{
+            //    for (var j = 0; j < macierzFloatA.Columns(); j++)
+            //    {
+            //        wektorFloatB[i] += macierzFloatA[i, j] * wektorFloatX[j];
+            //    }
+            //}
+
+            //for (var i = 0; i < wektorFloatB.Length; i++)
+            //{
+            //    _wektorFloatB[i] = wektorFloatB[i];
+            //}
+
+            ////Console.WriteLine("Wektor normy float: ");
+            //for (var i = 0; i < count; i++)
+            //{
+            //    macierzFloatA.GaussWithoutPivot(wektorFloatB);
+            //    for (var j = 0; j < wektorFloatX.Length; j++)
+            //    {
+            //        wektorNormyFloat[j] = wektorFloatB[j] - wektorFloatX[j];
+            //        for (var k = 0; k < wektorNormyFloat.Length; k++)
+            //        {
+            //            normaFloat += (float)Math.Pow(wektorNormyFloat[k], 2);
+            //            //normaDouble = Math.Sqrt(normaDouble);
+            //            macierzFloatA[j, k] = _macierzFloatA[j, k];
+            //            wektorFloatB[j] = _wektorFloatB[j];
+            //        }
+            //        //Console.WriteLine(wektorNormyFloat[j]);
+            //        wektorNormyFloat[j] = 0;
+            //    }
+            //}
+            //normaFloat = (float)Math.Sqrt(normaFloat);
+            //sredniaNormaFloat = normaFloat / count;
+
+            //StreamWriter writer = new StreamWriter("NormaGaussWithoutPivot.csv", append: true);
+            //if (writer != null)
+            //{
+            //    writer.WriteLine(String.Format(size + "x" + size + ";" + normaDouble + ";" + normaFloat));
+            //}
+            //writer.Close();
+
+            //Console.WriteLine("GAUSS WITHOUT PIVOT:");
+            //Console.WriteLine("Norma double: " + normaDouble);
+            //Console.WriteLine("Średnia norma double: " + sredniaNormaDouble);
+            //Console.WriteLine("Norma float: " + normaFloat);
+            //Console.WriteLine("Średnia norma float: " + sredniaNormaFloat);
         }
 
         public void GaussPartialPivotAccuracyTest(int size, int count)
@@ -645,7 +710,6 @@ namespace LukaszAlgo2
             {
                 //_wektorUlamekB[i] = wektorUlamekB[i];
                 _wektorDoubleB[i] = wektorDoubleB[i];
-                _wektorFloatB[i] = wektorFloatB[i];
             }
 
             //Console.WriteLine("Wektor normy double: ");

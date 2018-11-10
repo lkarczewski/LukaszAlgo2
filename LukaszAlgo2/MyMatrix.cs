@@ -48,11 +48,6 @@ namespace LukaszAlgo2
             Matrix = matrix;
         }
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
-
         public void PrintMatrix()
         {
             for (int i = 0; i < Rows(); i++)
@@ -64,6 +59,26 @@ namespace LukaszAlgo2
 
                 Console.WriteLine();
             }
+        }
+
+        public static T[] operator *(MyMatrix<T> a, T[] b)
+        {
+            if (a.Columns() != b.Length)
+                throw new ArgumentException("Matrix sizes are not equal.");
+
+            var output = new T[a.Rows()];
+            for (var row = 0; row < a.Rows(); row++)
+                output[row] = new T();
+
+            for (var row = 0; row < a.Rows(); row++)
+            {
+                for (var col = 0; col < b.Length; col++)
+                {
+                    output[row] += (dynamic)a[row, col] * (dynamic)b[col];
+                }
+            }
+
+            return output;
         }
 
         public int Rows()
